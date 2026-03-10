@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplikasi Survey Denah Pemasangan CCTV</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f5f7fa;padding:20px}
+.container{max-width:1000px;margin:auto;background:white;padding:30px;border-radius:8px;box-shadow:0 0 15px rgba(0,0,0,0.08)}
+h1{color:#2d3748;margin-bottom:30px;text-align:center;border-bottom:2px solid #3182ce;padding-bottom:10px}
+.section-title{color:#3182ce;margin:25px 0 15px;font-size:1.2rem}
+.form-group{margin-bottom:18px;display:flex;flex-direction:column;gap:8px}
+.form-group label{font-weight:600;color:#4a5568}
+.form-group input,.form-group select,.form-group textarea{padding:10px 12px;border:1px solid #cbd5e0;border-radius:4px;font-size:1rem}
+.form-group textarea{resize:vertical;min-height:80px}
+.point-form{background:#edf2f7;padding:20px;border-radius:6px;margin-bottom:20px;position:relative}
+.point-form h3{color:#2d3748;margin-bottom:15px;font-size:1.1rem}
+.remove-point-btn{position:absolute;top:15px;right:15px;padding:5px 10px;font-size:0.9rem}
+.btn-group{display:flex;gap:10px;margin-bottom:25px;flex-wrap:wrap}
+.btn{padding:10px 20px;border:none;border-radius:4px;font-size:1rem;cursor:pointer}
+.btn-primary{background:#3182ce;color:white}
+.btn-secondary{background:#48bb78;color:white}
+.btn-danger{background:#e53e3e;color:white}
+.empty-message{color:#718096;text-align:center;padding:20px}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Survey Denah Pemasangan CCTV</h1>
+
+<h2 class="section-title">1. Data Umum Lokasi</h2>
+
+<div class="form-group">
+<label>Nama Klien</label>
+<input type="text" id="client-name">
+</div>
+
+<div class="form-group">
+<label>Alamat</label>
+<textarea id="location-address"></textarea>
+</div>
+
+<div class="form-group">
+<label>Jenis Tempat</label>
+<select id="location-type">
+<option value="">Pilih</option>
+<option>Rumah</option>
+<option>Toko</option>
+<option>Gudang</option>
+<option>Kantor</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Luas Area m²</label>
+<input type="number" id="area-size">
+</div>
+
+<div class="form-group">
+<label>Tanggal Survey</label>
+<input type="date" id="survey-date">
+</div>
+
+<div class="form-group">
+<label>Petugas Survey</label>
+<input type="text" id="officer-name">
+</div>
+
+<h2 class="section-title">2. Titik Kamera</h2>
+
+<div class="btn-group">
+<button class="btn btn-secondary" onclick="addPoint()">Tambah Titik</button>
+</div>
+
+<div id="points-container">
+<p class="empty-message">Belum ada titik kamera</p>
+</div>
+
+<div class="btn-group">
+<button class="btn btn-primary" onclick="saveData()">Simpan</button>
+<button class="btn btn-danger" onclick="resetData()">Reset</button>
+</div>
+
+</div>
+
+<script>
+
+function addPoint(){
+
+let container=document.getElementById("points-container")
+
+if(container.querySelector(".empty-message")){
+container.innerHTML=""
+}
+
+let id=Date.now()
+
+let div=document.createElement("div")
+div.className="point-form"
+
+div.innerHTML=`
+<h3>Titik Kamera</h3>
+
+<div class="form-group">
+<label>Zona</label>
+<input type="text" class="zone">
+</div>
+
+<div class="form-group">
+<label>Jenis Kamera</label>
+<select class="type">
+<option>IP Camera</option>
+<option>Analog</option>
+<option>PTZ</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Resolusi</label>
+<select class="res">
+<option>2MP</option>
+<option>4MP</option>
+<option>5MP</option>
+<option>8MP</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Tinggi Pemasangan cm</label>
+<input type="number" class="height">
+</div>
+
+<button class="btn btn-danger" onclick="this.parentElement.remove()">Hapus</button>
+`
+
+container.appendChild(div)
+
+}
+
+function saveData(){
+
+let data={}
+
+data.client=document.getElementById("client-name").value
+data.address=document.getElementById("location-address").value
+data.type=document.getElementById("location-type").value
+data.area=document.getElementById("area-size").value
+data.date=document.getElementById("survey-date").value
+data.officer=document.getElementById("officer-name").value
+
+localStorage.setItem("surveyCCTV",JSON.stringify(data))
+
+alert("Data survey disimpan")
+
+}
+
+function resetData(){
+
+localStorage.removeItem("surveyCCTV")
+location.reload()
+
+}
+
+</script>
+
+</body>
+</html>
